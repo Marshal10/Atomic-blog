@@ -45,13 +45,7 @@ function App() {
 
   return (
     <section>
-      <button
-        onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
-        className="btn-fake-dark-mode"
-      >
-        {isFakeDark ? "☀️" : "🌙"}
-      </button>
-
+      <LightDarkBtn isFakeDark={isFakeDark} setIsFakeDark={setIsFakeDark} />
       <PostContext.Provider
         value={{
           posts: searchedPosts,
@@ -193,6 +187,17 @@ function Archive() {
         </ul>
       )}
     </aside>
+  );
+}
+
+function LightDarkBtn({ isFakeDark, setIsFakeDark }) {
+  return (
+    <button
+      onClick={() => setIsFakeDark((isFakeDark) => !isFakeDark)}
+      className="btn-fake-dark-mode"
+    >
+      {isFakeDark ? "☀️" : "🌙"}
+    </button>
   );
 }
 
