@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
 
 function createRandomPost() {
@@ -33,6 +33,8 @@ function App() {
     setPosts([]);
   }
 
+  const PostContext = createContext();
+
   // Whenever `isFakeDark` changes, we toggle the `fake-dark-mode` class on the HTML element (see in "Elements" dev tool).
   useEffect(
     function () {
@@ -50,15 +52,25 @@ function App() {
         {isFakeDark ? "☀️" : "🌙"}
       </button>
 
-      <Header
-        posts={searchedPosts}
-        onClearPosts={handleClearPosts}
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
-      <Main posts={searchedPosts} onAddPost={handleAddPost} />
-      <Archive onAddPost={handleAddPost} />
-      <Footer />
+      <PostContext.Provider
+        value={{
+          posts: searchedPosts,
+          onClearPosts: handleClearPosts,
+          searchQuery,
+          setSearchQuery,
+          onAddPost: handleAddPost,
+        }}
+      >
+        <Header
+          posts={searchedPosts}
+          onClearPosts={handleClearPosts}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
+        <Main posts={searchedPosts} onAddPost={handleAddPost} />
+        <Archive onAddPost={handleAddPost} />
+        <Footer />
+      </PostContext.Provider>
     </section>
   );
 }
