@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { faker } from "@faker-js/faker";
 
 function createRandomPost() {
@@ -7,6 +7,8 @@ function createRandomPost() {
     body: faker.hacker.phrase(),
   };
 }
+
+const PostContext = createContext();
 
 function App() {
   const [posts, setPosts] = useState(() =>
@@ -32,8 +34,6 @@ function App() {
   function handleClearPosts() {
     setPosts([]);
   }
-
-  const PostContext = createContext();
 
   // Whenever `isFakeDark` changes, we toggle the `fake-dark-mode` class on the HTML element (see in "Elements" dev tool).
   useEffect(
@@ -61,12 +61,7 @@ function App() {
           onAddPost: handleAddPost,
         }}
       >
-        <Header
-          posts={searchedPosts}
-          onClearPosts={handleClearPosts}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-        />
+        <Header />
         <Main posts={searchedPosts} onAddPost={handleAddPost} />
         <Archive onAddPost={handleAddPost} />
         <Footer />
@@ -75,25 +70,24 @@ function App() {
   );
 }
 
-function Header({ posts, onClearPosts, searchQuery, setSearchQuery }) {
+function Header() {
+  const { onClearPosts } = useContext(PostContext);
   return (
     <header>
       <h1>
         <span>⚛️</span>The Atomic Blog
       </h1>
       <div>
-        <Results posts={posts} />
-        <SearchPosts
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-        />
+        <Results />
+        <SearchPosts />
         <button onClick={onClearPosts}>Clear posts</button>
       </div>
     </header>
   );
 }
 
-function SearchPosts({ searchQuery, setSearchQuery }) {
+function SearchPosts() {
+  const { searchQuery, setSearchQuery } = useContext(PostContext);
   return (
     <input
       value={searchQuery}
@@ -103,7 +97,8 @@ function SearchPosts({ searchQuery, setSearchQuery }) {
   );
 }
 
-function Results({ posts }) {
+function Results() {
+  const { posts } = useContext(PostContext);
   return <p>🚀 {posts.length} atomic posts found</p>;
 }
 
